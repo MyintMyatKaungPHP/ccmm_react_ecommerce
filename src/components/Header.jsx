@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Logo from "../assets/images/logo.png";
 
 function Header() {
   return (
     <div className="flex items-center justify-between xl:px-32 sm:px-5 px-2 bg-secondary">
       <Link to="/">
         <img
-          src="./Logo.png"
+          src={Logo}
           className="md:w-[150px] w-[100px] h-[80px] object-cover md:h-[12 0px]"
         />
       </Link>
