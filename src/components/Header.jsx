@@ -33,7 +33,7 @@ function Header() {
           <p>Your Cart</p>
         </div>
         {/* <!-- <UserDropDown  /> --> */}
-        <div v-else className="md:flex hidden items-center gap-3">
+        <div className="md:flex hidden items-center gap-3">
           <Link
             to="/Login"
             className="px-8 py-4 font-bold rounded-lg bg-primary text-white"
