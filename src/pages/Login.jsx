@@ -28,12 +28,13 @@ function Login() {
               placeholder="Enter your password"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full py-4 text-white font-bold text-xl rounded-full bg-primary block"
+          <Link
+            type="buttom"
+            to={"/admin/dashboard"}
+            className="w-full py-4 text-center text-white font-bold text-xl rounded-full bg-primary block"
           >
             Login
-          </button>
+          </Link>
           <p className="text-sm text-center font-semibold">
             You don't have account? Register
             <Link className="text-primary underline" to="/Register">

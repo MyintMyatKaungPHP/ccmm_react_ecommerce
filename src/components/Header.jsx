@@ -35,13 +35,13 @@ function Header() {
         {/* <!-- <UserDropDown  /> --> */}
         <div className="md:flex hidden items-center gap-3">
           <Link
-            to="/Login"
+            to="/login"
             className="px-8 py-4 font-bold rounded-lg bg-primary text-white"
           >
             Login
           </Link>
           <Link
-            to="/Register"
+            to="/register"
             className="px-8 py-4 font-bold rounded-lg text-primary border-2 border-primary"
           >
             Register

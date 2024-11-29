@@ -1,56 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import useFetchProducts from "../hooks/useFetchProducts";
+import useFetchCategories from "../hooks/useFetchCategories";
 
 function Home() {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [search, setSearch] = useState("");
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const getProducts = async (search) => {
-    try {
-      const response = await fetch(
-        "http://ccmm_react_ecommerce_backend.test/api/products?name=" + search
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
-      setProducts(data.products);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getCategories = async () => {
-    try {
-      const response = await fetch(
-        "http://ccmm_react_ecommerce_backend.test/api/categories"
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories");
-      }
-      const data = await response.json();
-      setCategories(data.categories);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getCategories();
-  }, []);
-
-  useEffect(() => {
-    getProducts(search);
-  }, [search]);
+  const {
+    categories,
+    loading: categoriesLoading,
+    error: categoriesError,
+  } = useFetchCategories();
+  const {
+    products,
+    search,
+    setSearch,
+    loading: productsLoading,
+    error: productsError,
+  } = useFetchProducts();
 
   return (
     <div className="xl:px-32 sm:px-5 px-2">
@@ -62,6 +27,7 @@ function Home() {
         </p>
       </div>
       <div className="flex md:flex-row flex-col top-0 mb-[100px]">
+        {/* Sidebar */}
         <div className="lg:w-[25%] md:w-[35%] w-full md:sticky self-start top-16">
           <div className="flex items-center pl-2 rounded-full bg-white border-[1px] h-[50px]">
             <svg
@@ -78,9 +44,7 @@ function Home() {
             </svg>
             <input
               value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
+              onChange={(e) => setSearch(e.target.value)}
               type="text"
               className="w-full p-0 pl-2 border-none bg-transparent outline-none focus:ring-0"
               placeholder="Search for products"
@@ -89,40 +53,41 @@ function Home() {
           <div>
             <p className="text mt-8 mb-3 font-bold">Product By Category</p>
             <div>
-              {loading ? (
-                <p>Loading product categories...</p>
-              ) : error ? (
-                <p className="text-red-500">Error: {error}</p>
-              ) : categories.length > 0 ? (
+              {categoriesLoading && <p>{categoriesLoading}</p>}{" "}
+              {/* Loading state */}
+              {categoriesError && (
+                <p className="text-red-500">{categoriesError}</p>
+              )}{" "}
+              {/* Error state */}
+              {categories.length <= 0 && <p>No categories available.</p>}{" "}
+              {/* No categories */}
+              {categories.length > 0 && (
                 <div className="flex flex-col gap-2">
                   {categories.map((category) => (
                     <div
                       key={category.id}
-                      className="flex items-center  cursor-pointer gap-2 py-3 px-2 border-t-[1px] border-t-black/10 hover:text-primary hover:bg-[#F7F8F9] transition-all"
+                      className="flex items-center cursor-pointer gap-2 py-3 px-2 border-t-[1px] border-t-black/10 hover:text-primary hover:bg-[#F7F8F9] transition-all"
                     >
                       {category.name}
                     </div>
                   ))}
                 </div>
-              ) : (
-                <p>No categories found.</p>
               )}
             </div>
           </div>
         </div>
+
+        {/* Products Section */}
         <div className="lg:w-[75%] md:w-[65%] md:mt-0 mt-10 w-full mb-12 md:pl-[8%]">
-          {loading ? (
-            <p>Loading products...</p>
-          ) : error ? (
-            <p className="text-red-500">Error: {error}</p>
-          ) : products.length > 0 ? (
+          {productsLoading && <p>{productsLoading}</p>}
+          {productsError && <p className="text-red-500">{productsError}</p>}
+          {products.length <= 0 && <p>No products found.</p>}
+          {products.length > 0 && (
             <div className="grid lg:grid-cols-4 md:grid-cols-2 mb-14 gap-x-5 gap-y-10">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-          ) : (
-            <p>No products found.</p>
           )}
         </div>
       </div>
