@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "products/:id", // Avoid case sensitivity for paths
+        path: "products/:id",
         element: <ProductDetail />,
       },
       {

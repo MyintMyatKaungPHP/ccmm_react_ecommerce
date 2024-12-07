@@ -1,9 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useReducer, useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import useFetchProducts from "../hooks/useFetchProducts";
 import useFetchCategories from "../hooks/useFetchCategories";
 
+// Initial State for Reducer
+const initialState = {
+  loading: true,
+};
+
+// Reducer Function
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
+    default:
+      return state;
+  }
+}
+
 function Home() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   const {
     categories,
     loading: categoriesLoading,
@@ -16,6 +33,23 @@ function Home() {
     loading: productsLoading,
     error: productsError,
   } = useFetchProducts();
+
+  // Use Effect to Manage Loading State
+  useEffect(() => {
+    const isLoading = categoriesLoading || productsLoading;
+    dispatch({ type: "SET_LOADING", payload: isLoading });
+  }, [categoriesLoading, productsLoading]);
+
+  if (state.loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <p className="text-2xl font-bold">Loading...</p>
+          <div className="mt-4 spinner border-4 border-primary border-t-transparent rounded-full w-16 h-16 animate-spin"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="xl:px-32 sm:px-5 px-2">
@@ -53,14 +87,10 @@ function Home() {
           <div>
             <p className="text mt-8 mb-3 font-bold">Product By Category</p>
             <div>
-              {categoriesLoading && <p>{categoriesLoading}</p>}{" "}
-              {/* Loading state */}
               {categoriesError && (
                 <p className="text-red-500">{categoriesError}</p>
-              )}{" "}
-              {/* Error state */}
-              {categories.length <= 0 && <p>No categories available.</p>}{" "}
-              {/* No categories */}
+              )}
+              {categories.length <= 0 && <p>No categories available.</p>}
               {categories.length > 0 && (
                 <div className="flex flex-col gap-2">
                   {categories.map((category) => (
@@ -79,7 +109,6 @@ function Home() {
 
         {/* Products Section */}
         <div className="lg:w-[75%] md:w-[65%] md:mt-0 mt-10 w-full mb-12 md:pl-[8%]">
-          {productsLoading && <p>{productsLoading}</p>}
           {productsError && <p className="text-red-500">{productsError}</p>}
           {products.length <= 0 && <p>No products found.</p>}
           {products.length > 0 && (

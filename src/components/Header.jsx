@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
+import { AuthContext } from "../contexts/AuthContext";
 
 function Header() {
+  let { user, setUser } = useContext(AuthContext);
+  console.log(user, "login user data");
   return (
     <div className="flex items-center justify-between xl:px-32 sm:px-5 px-2 bg-secondary">
       <Link to="/">
@@ -33,20 +36,41 @@ function Header() {
           <p>Your Cart</p>
         </div>
         {/* <!-- <UserDropDown  /> --> */}
-        <div className="md:flex hidden items-center gap-3">
-          <Link
-            to="/login"
-            className="px-8 py-4 font-bold rounded-lg bg-primary text-white"
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="px-8 py-4 font-bold rounded-lg text-primary border-2 border-primary"
-          >
-            Register
-          </Link>
-        </div>
+        {!user ? (
+          <div className="md:flex hidden items-center gap-3">
+            <Link
+              to="/login"
+              className="px-8 py-4 font-bold rounded-lg bg-primary text-white"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="px-8 py-4 font-bold rounded-lg text-primary border-2 border-primary"
+            >
+              Register
+            </Link>
+          </div>
+        ) : (
+          <div className="md:flex hidden items-center gap-3">
+            <p className="text-white">Hello, {user.name}</p>
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+                setUser(null);
+              }}
+              className="px-8 py-4 font-bold rounded-lg bg-red-500 text-white"
+            >
+              Logout
+            </button>
+            <Link
+              to="/admin/dashboard"
+              className="px-8 py-4 font-bold rounded-lg text-primary border-2 border-primary"
+            >
+              Dashboard
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
