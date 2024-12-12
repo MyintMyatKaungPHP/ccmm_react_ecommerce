@@ -5,7 +5,7 @@ import "./index.css";
 import axios from "axios";
 import AuthContextProvider from "./contexts/AuthContext";
 
-axios.defaults.baseURL = "http://ccmm_react_ecommerce_backend.test";
+axios.defaults.baseURL = "http://ccmm_react_ecommerce_backend_1.test";
 
 createRoot(document.getElementById("root")).render(
   <AuthContextProvider>
